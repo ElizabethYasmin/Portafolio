@@ -1,0 +1,24 @@
+/// Constantes de configuración de APIs
+class ApiConstants {
+  ApiConstants._();
+
+  // DECOLECTA API
+  static const String decolectaBaseUrl = 'https://api.decolecta.com';
+  static const String decolectaApiKey = 'sk_12091.ydBsh4Xhx0XBODzTTjVvrNFAtGzZB3x8';
+
+  // GitHub API
+  static const String githubBaseUrl = 'https://api.github.com';
+  static const String githubUsername = 'ElizabethYasmin';
+
+  // LinkedIn
+  static const String linkedInUrl = 'https://www.linkedin.com/in/elizabeth-yasmin-huanca-parqui-192564195/';
+
+  // Endpoints
+  static const String dniEndpoint = '/v1/sunat/ruc';
+  static const String rucEndpoint = '/v1/sunat/ruc';
+  static const String rucFullEndpoint = '/v1/sunat/ruc/full';
+
+  // Timeouts
+  static const Duration connectionTimeout = Duration(seconds: 30);
+  static const Duration receiveTimeout = Duration(seconds: 30);
+}
