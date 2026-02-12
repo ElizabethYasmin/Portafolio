@@ -46,3 +46,10 @@ app.*.map.json
 .env
 .env.local
 *.env
+
+# Archivos 3D grandes (solo subir los optimizados en assets/)
+*.glb
+!assets/*.glb
+
+# Archivo nul (Windows)
+nul
