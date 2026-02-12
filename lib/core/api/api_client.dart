@@ -5,7 +5,10 @@ import 'package:portafolio_yasmin/core/constants/api_constants.dart';
 
 class ApiClient {
   static const String _baseUrlDirect = "https://api.apis.net.pe/v2";
-  static const String token = "apis-token-13256.AaMuj87c8DJO6III6YDgTey6lunnM8jk";
+  static const String token = String.fromEnvironment(
+    'APISNET_TOKEN',
+    defaultValue: '',
+  );
 
   Future<Map<String, dynamic>?> get(String endpoint) async {
     // En web: usar proxy Cloudflare (/apisnet/...)
