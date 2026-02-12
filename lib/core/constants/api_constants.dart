@@ -2,6 +2,9 @@
 class ApiConstants {
   ApiConstants._();
 
+  // Proxy CORS (Cloudflare Worker) - usado en Web para evitar CORS
+  static const String proxyBaseUrl = 'https://portafolio001.elizabethhuanca40172.workers.dev';
+
   // DECOLECTA API
   static const String decolectaBaseUrl = 'https://api.decolecta.com';
   static const String decolectaApiKey = 'sk_12091.ydBsh4Xhx0XBODzTTjVvrNFAtGzZB3x8';

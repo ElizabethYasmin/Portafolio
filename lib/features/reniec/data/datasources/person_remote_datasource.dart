@@ -38,36 +38,23 @@ class PersonRemoteDataSourceImpl implements PersonRemoteDataSource {
   /// En web usa proxy CORS público para evitar errores
   Future<PersonModel> _makeRequest({required String endpoint}) async {
     try {
-      // Proxy CORS público para web
-      const corsProxy = 'https://api.allorigins.win/raw?url=';
+      // En web: usar proxy Cloudflare (/decolecta/...)
+      // En móvil: usar API directa
+      final String baseUrl = kIsWeb
+          ? '${ApiConstants.proxyBaseUrl}/decolecta'
+          : ApiConstants.decolectaBaseUrl;
 
-      // En web usar proxy CORS, en móvil usar API directa
-      final String fullUrl = kIsWeb
-          ? '$corsProxy${Uri.encodeComponent('${ApiConstants.decolectaBaseUrl}$endpoint')}'
-          : '${ApiConstants.decolectaBaseUrl}$endpoint';
-
-      final uri = Uri.parse(fullUrl);
-
-      print('🌐 Realizando petición a: $uri');
-      print('📱 Plataforma: ${kIsWeb ? "Web (usando proxy CORS público)" : "Nativa"}');
+      final uri = Uri.parse('$baseUrl$endpoint');
 
       final response = await client.get(
         uri,
-        headers: kIsWeb
-            ? {
-                // En web con proxy público, solo headers básicos
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              }
-            : {
-                // En móvil, enviamos el token directamente
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ${ApiConstants.decolectaApiKey}',
-                'Accept': 'application/json',
-              },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          if (!kIsWeb) 'Authorization': 'Bearer ${ApiConstants.decolectaApiKey}',
+        },
       ).timeout(ApiConstants.connectionTimeout);
 
-      print('📥 Respuesta: ${response.statusCode}');
       return _handleResponse(response);
     } catch (e) {
       throw NetworkException(message: 'Error de conexión: ${e.toString()}');

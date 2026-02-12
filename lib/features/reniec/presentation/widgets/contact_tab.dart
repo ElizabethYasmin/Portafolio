@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:portafolio_yasmin/core/theme/darcula_colors.dart';
 import 'package:portafolio_yasmin/features/reniec/domain/entities/person_entity.dart';
 
-/// Tab de Contacto
+/// Tab de Contacto - Estilo Android Studio Darcula
 class ContactTab extends StatelessWidget {
   final PersonEntity person;
 
@@ -14,40 +15,44 @@ class ContactTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           _buildHeader(),
-          const SizedBox(height: 30),
-
-          // Información de contacto
+          const SizedBox(height: 16),
+          const Text(
+            '// Información de contacto',
+            style: TextStyle(
+              fontSize: 12,
+              color: DarculaColors.comment,
+              fontFamily: 'monospace',
+            ),
+          ),
+          const SizedBox(height: 12),
           _buildContactCard(
             context: context,
-            icon: Icons.email,
-            title: 'Email',
-            value: 'elizabeth.yasmin@example.com',
-            color: const Color(0xFFEA4335),
+            icon: Icons.email_outlined,
+            label: 'email',
+            value: 'elizabethhuancap@gmail.com',
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 8),
           _buildContactCard(
             context: context,
-            icon: Icons.phone,
-            title: 'Teléfono',
-            value: '+51 999 999 999',
-            color: const Color(0xFF34A853),
+            icon: Icons.phone_outlined,
+            label: 'telefono',
+            value: '+51 967 794 542',
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 8),
           _buildContactCard(
             context: context,
-            icon: Icons.location_on,
-            title: 'Ubicación',
-            value: '${person.distrito}, ${person.provincia}',
-            color: const Color(0xFF4285F4),
+            icon: Icons.location_on_outlined,
+            label: 'ubicacion',
+            value: person.distrito.isNotEmpty
+                ? '${person.distrito}, ${person.provincia}'
+                : 'Lima, Perú',
           ),
-          const SizedBox(height: 30),
-
-          // Formulario de contacto
+          const SizedBox(height: 20),
           _buildContactForm(context),
         ],
       ),
@@ -56,40 +61,40 @@ class ContactTab extends StatelessWidget {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4facfe).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        color: DarculaColors.androidGreen.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: DarculaColors.androidGreen.withOpacity(0.3), width: 1),
       ),
-      child: const Column(
+      child: Row(
         children: [
-          Icon(Icons.contact_mail, size: 50, color: Colors.white),
-          SizedBox(height: 15),
-          Text(
-            'Contáctame',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          const Icon(Icons.android, color: DarculaColors.androidGreen, size: 40),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Contáctame',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: DarculaColors.textBright,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '// Disponible para nuevos proyectos',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: DarculaColors.comment,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Estoy disponible para nuevos proyectos',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -99,67 +104,76 @@ class ContactTab extends StatelessWidget {
   Widget _buildContactCard({
     required BuildContext context,
     required IconData icon,
-    required String title,
+    required String label,
     required String value,
-    required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
+        color: DarculaColors.panel,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: DarculaColors.border, width: 1),
       ),
       child: Row(
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 25),
-          ),
-          const SizedBox(width: 15),
+          Icon(icon, color: DarculaColors.androidGreen, size: 20),
+          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
                 Text(
-                  title,
+                  'val ',
                   style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white54,
+                    fontSize: 13,
+                    color: DarculaColors.keyword,
+                    fontFamily: 'monospace',
                   ),
                 ),
-                const SizedBox(height: 5),
                 Text(
-                  value,
+                  '$label ',
                   style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: DarculaColors.field,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+                const Text(
+                  '= ',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: DarculaColors.text,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    '"$value"',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: DarculaColors.string,
+                      fontFamily: 'monospace',
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.copy, color: Colors.white54),
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Clipboard.setData(ClipboardData(text: value));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('$title copiado'),
+                  content: Text(
+                    'Copiado: $value',
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  ),
+                  backgroundColor: DarculaColors.panel,
                   duration: const Duration(seconds: 2),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             },
+            child: const Icon(Icons.copy, color: DarculaColors.textDim, size: 14),
           ),
         ],
       ),
@@ -168,52 +182,60 @@ class ContactTab extends StatelessWidget {
 
   Widget _buildContactForm(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(15),
+        color: DarculaColors.panel,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: DarculaColors.border, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Envíame un mensaje',
+            '// Envíame un mensaje',
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              fontSize: 12,
+              color: DarculaColors.comment,
+              fontFamily: 'monospace',
             ),
           ),
-          const SizedBox(height: 20),
-          _buildTextField('Nombre', Icons.person),
-          const SizedBox(height: 15),
-          _buildTextField('Email', Icons.email),
-          const SizedBox(height: 15),
-          _buildTextField('Mensaje', Icons.message, maxLines: 5),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          _buildTextField('Nombre', Icons.person_outline),
+          const SizedBox(height: 10),
+          _buildTextField('Email', Icons.email_outlined),
+          const SizedBox(height: 10),
+          _buildTextField('Mensaje', Icons.message_outlined, maxLines: 4),
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('¡Mensaje enviado! Te contactaré pronto.'),
+                    content: Text(
+                      'Build: mensaje enviado exitosamente',
+                      style: TextStyle(fontFamily: 'monospace', fontSize: 12),
+                    ),
+                    backgroundColor: DarculaColors.panel,
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4facfe),
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              icon: const Icon(Icons.send, size: 14),
+              label: const Text(
+                'run sendMessage()',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              child: const Text(
-                'Enviar Mensaje',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: DarculaColors.androidGreen,
+                foregroundColor: DarculaColors.background,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
@@ -226,29 +248,33 @@ class ContactTab extends StatelessWidget {
   Widget _buildTextField(String label, IconData icon, {int maxLines = 1}) {
     return TextField(
       maxLines: maxLines,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(
+        color: DarculaColors.text,
+        fontFamily: 'monospace',
+        fontSize: 13,
+      ),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white54),
-        prefixIcon: Icon(icon, color: Colors.white54),
+        labelStyle: const TextStyle(
+          color: DarculaColors.textDim,
+          fontFamily: 'monospace',
+          fontSize: 12,
+        ),
+        prefixIcon: Icon(icon, color: DarculaColors.textDim, size: 18),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
+        fillColor: DarculaColors.backgroundLight,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: DarculaColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.2),
-          ),
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: DarculaColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xFF4facfe),
-            width: 2,
-          ),
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: DarculaColors.androidGreen, width: 1),
         ),
       ),
     );

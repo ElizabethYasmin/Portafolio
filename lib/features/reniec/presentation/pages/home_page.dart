@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:portafolio_yasmin/core/theme/darcula_colors.dart';
 import 'package:portafolio_yasmin/features/reniec/domain/entities/person_entity.dart';
 import 'package:portafolio_yasmin/features/reniec/presentation/widgets/profile_tab.dart';
 import 'package:portafolio_yasmin/features/reniec/presentation/widgets/github_tab.dart';
 import 'package:portafolio_yasmin/features/reniec/presentation/widgets/social_tab.dart';
 import 'package:portafolio_yasmin/features/reniec/presentation/widgets/contact_tab.dart';
 
-/// Pantalla principal del portafolio
-/// Implementa TabBar con diferentes secciones
+/// Pantalla principal - Diseño inspirado en Android Studio Darcula
 class HomePage extends StatefulWidget {
   final PersonEntity person;
 
@@ -38,123 +38,226 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1a1a2e),
-              Color(0xFF16213e),
-              Color(0xFF0f3460),
-            ],
+      backgroundColor: DarculaColors.background,
+      body: Column(
+        children: [
+          // Toolbar superior (como Android Studio)
+          _buildToolbar(),
+
+          // TabBar (como pestañas de archivos)
+          _buildTabBar(),
+
+          // Contenido
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                ProfileTab(person: widget.person),
+                const GitHubTab(),
+                const SocialTab(),
+                ContactTab(person: widget.person),
+              ],
+            ),
           ),
+
+          // Status bar inferior
+          _buildStatusBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToolbar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: const BoxDecoration(
+        color: DarculaColors.toolbar,
+        border: Border(
+          bottom: BorderSide(color: DarculaColors.border, width: 1),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-
-              // TabBar
-              _buildTabBar(),
-
-              // TabBarView
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    ProfileTab(person: widget.person),
-                    const GitHubTab(),
-                    const SocialTab(),
-                    ContactTab(person: widget.person),
-                  ],
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Row(
+          children: [
+            // Avatar
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: DarculaColors.border, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(3),
+                child: Image.network(
+                  'https://avatars.githubusercontent.com/u/62725994?v=4',
+                  width: 36,
+                  height: 36,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: DarculaColors.panel,
+                    child: const Icon(Icons.person, color: DarculaColors.text, size: 20),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 12),
+
+            // Nombre como "título de proyecto"
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.android, color: DarculaColors.success, size: 16),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          widget.person.razonSocial,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: DarculaColors.textBright,
+                            fontFamily: 'monospace',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'portafolio_yasmin > ${widget.person.estado}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: DarculaColors.textDim,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Status badge (como run config)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: widget.person.isActive
+                    ? DarculaColors.success.withOpacity(0.15)
+                    : DarculaColors.error.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(3),
+                border: Border.all(
+                  color: widget.person.isActive
+                      ? DarculaColors.success
+                      : DarculaColors.error,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    widget.person.isActive ? Icons.play_arrow : Icons.stop,
+                    color: widget.person.isActive
+                        ? DarculaColors.success
+                        : DarculaColors.error,
+                    size: 12,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    widget.person.isActive ? 'ACTIVO' : 'INACTIVO',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: widget.person.isActive
+                          ? DarculaColors.success
+                          : DarculaColors.error,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildTabBar() {
     return Container(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          // Avatar
-          Hero(
-            tag: 'profile_avatar',
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 30,
-              ),
+      decoration: const BoxDecoration(
+        color: DarculaColors.backgroundLight,
+        border: Border(
+          bottom: BorderSide(color: DarculaColors.border, width: 1),
+        ),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: const BoxDecoration(
+          color: DarculaColors.background,
+          border: Border(
+            top: BorderSide(color: DarculaColors.tabIndicator, width: 2),
+          ),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
+        labelColor: DarculaColors.textBright,
+        unselectedLabelColor: DarculaColors.textDim,
+        labelStyle: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 12,
+        ),
+        tabs: const [
+          Tab(
+            height: 32,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.person_outline, size: 14),
+                SizedBox(width: 6),
+                Text('Perfil.dart'),
+              ],
             ),
           ),
-          const SizedBox(width: 15),
-
-          // Información
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Tab(
+            height: 32,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  widget.person.razonSocial,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 5),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: widget.person.isActive
-                        ? Colors.green.withOpacity(0.2)
-                        : Colors.red.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: widget.person.isActive
-                          ? Colors.green
-                          : Colors.red,
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    widget.person.estado,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: widget.person.isActive
-                          ? Colors.green
-                          : Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                Icon(Icons.code, size: 14),
+                SizedBox(width: 6),
+                Text('GitHub.dart'),
+              ],
+            ),
+          ),
+          Tab(
+            height: 32,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.share, size: 14),
+                SizedBox(width: 6),
+                Text('Redes.dart'),
+              ],
+            ),
+          ),
+          Tab(
+            height: 32,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.email_outlined, size: 14),
+                SizedBox(width: 6),
+                Text('Contacto.dart'),
               ],
             ),
           ),
@@ -163,41 +266,52 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildTabBar() {
+  Widget _buildStatusBar() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: TabBar(
-        controller: _tabController,
-        indicator: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-          borderRadius: BorderRadius.circular(25),
+      height: 24,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: const BoxDecoration(
+        color: DarculaColors.toolbar,
+        border: Border(
+          top: BorderSide(color: DarculaColors.border, width: 1),
         ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        dividerColor: Colors.transparent,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.white60,
-        tabs: const [
-          Tab(
-            icon: Icon(Icons.person),
-            text: 'Perfil',
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: DarculaColors.success,
+            ),
           ),
-          Tab(
-            icon: Icon(Icons.code),
-            text: 'GitHub',
+          const SizedBox(width: 6),
+          const Text(
+            'Build: successful',
+            style: TextStyle(
+              fontSize: 11,
+              color: DarculaColors.textDim,
+              fontFamily: 'monospace',
+            ),
           ),
-          Tab(
-            icon: Icon(Icons.share),
-            text: 'Redes',
+          const Spacer(),
+          const Text(
+            'Flutter 3.x | Dart',
+            style: TextStyle(
+              fontSize: 11,
+              color: DarculaColors.textDim,
+              fontFamily: 'monospace',
+            ),
           ),
-          Tab(
-            icon: Icon(Icons.email),
-            text: 'Contacto',
+          const SizedBox(width: 12),
+          const Text(
+            'UTF-8',
+            style: TextStyle(
+              fontSize: 11,
+              color: DarculaColors.textDim,
+              fontFamily: 'monospace',
+            ),
           ),
         ],
       ),
