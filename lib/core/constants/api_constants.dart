@@ -1,4 +1,5 @@
 /// Constantes de configuración de APIs
+/// Las API keys se pasan via --dart-define al compilar
 class ApiConstants {
   ApiConstants._();
 
@@ -7,7 +8,10 @@ class ApiConstants {
 
   // DECOLECTA API
   static const String decolectaBaseUrl = 'https://api.decolecta.com';
-  static const String decolectaApiKey = 'sk_12091.ydBsh4Xhx0XBODzTTjVvrNFAtGzZB3x8';
+  static const String decolectaApiKey = String.fromEnvironment(
+    'DECOLECTA_API_KEY',
+    defaultValue: '',
+  );
 
   // GitHub API
   static const String githubBaseUrl = 'https://api.github.com';

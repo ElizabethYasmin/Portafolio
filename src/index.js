@@ -1,37 +1,37 @@
 /**
  * Cloudflare Worker - Proxy CORS para Flutter Web
  *
- * Este worker recibe peticiones desde tu app Flutter Web
- * y las reenvía a las APIs externas (decolecta, github, etc.)
- * agregando los headers de autorización y CORS necesarios.
- *
- * Gratis: 100,000 peticiones/día en el plan free.
+ * Las API keys se configuran como Secrets en Cloudflare Dashboard:
+ * Settings > Variables and Secrets > Add
+ * - DECOLECTA_API_KEY
+ * - APISNET_TOKEN
  */
 
-// Configuración de APIs y sus tokens
-const API_CONFIG = {
-  '/decolecta': {
-    baseUrl: 'https://api.decolecta.com',
-    headers: {
-      'Authorization': 'Bearer sk_12091.ydBsh4Xhx0XBODzTTjVvrNFAtGzZB3x8',
-      'Content-Type': 'application/json',
+function getApiConfig(env) {
+  return {
+    '/decolecta': {
+      baseUrl: 'https://api.decolecta.com',
+      headers: {
+        'Authorization': `Bearer ${env.DECOLECTA_API_KEY || ''}`,
+        'Content-Type': 'application/json',
+      },
     },
-  },
-  '/apisnet': {
-    baseUrl: 'https://api.apis.net.pe/v2',
-    headers: {
-      'Authorization': 'Bearer apis-token-13256.AaMuj87c8DJO6III6YDgTey6lunnM8jk',
-      'Accept': 'application/json',
+    '/apisnet': {
+      baseUrl: 'https://api.apis.net.pe/v2',
+      headers: {
+        'Authorization': `Bearer ${env.APISNET_TOKEN || ''}`,
+        'Accept': 'application/json',
+      },
     },
-  },
-  '/github': {
-    baseUrl: 'https://api.github.com',
-    headers: {
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'Flutter-Portfolio-App',
+    '/github': {
+      baseUrl: 'https://api.github.com',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Flutter-Portfolio-App',
+      },
     },
-  },
-};
+  };
+}
 
 // Headers CORS que se agregan a todas las respuestas
 const CORS_HEADERS = {
@@ -42,7 +42,7 @@ const CORS_HEADERS = {
 };
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     // Manejar preflight (OPTIONS)
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
@@ -50,6 +50,7 @@ export default {
 
     const url = new URL(request.url);
     const path = url.pathname;
+    const API_CONFIG = getApiConfig(env);
 
     // Ruta raíz: mostrar info del proxy
     if (path === '/' || path === '') {
