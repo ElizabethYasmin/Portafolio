@@ -16,6 +16,8 @@ final sl = GetIt.instance;
 /// Inicializar todas las dependencias
 /// Debe llamarse en main() antes de runApp()
 Future<void> initializeDependencies() async {
+  if (sl.isRegistered<PersonBloc>()) return;
+
   // ============ FEATURES ============
 
   // BLoC - Factory: nueva instancia cada vez

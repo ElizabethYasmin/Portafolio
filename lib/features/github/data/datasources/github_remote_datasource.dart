@@ -17,20 +17,15 @@ class GitHubRemoteDataSourceImpl implements GitHubRemoteDataSource {
   @override
   Future<List<RepositoryModel>> getUserRepositories(String username) async {
     try {
-      // Proxy CORS público para web
-      const corsProxy = 'https://api.allorigins.win/raw?url=';
+      // En web: usar proxy Cloudflare (/github/...)
+      // En móvil: usar API directa
+      final String baseUrl = kIsWeb
+          ? '${ApiConstants.proxyBaseUrl}/github'
+          : ApiConstants.githubBaseUrl;
 
-      final apiUrl = '${ApiConstants.githubBaseUrl}/users/$username/repos?sort=updated&per_page=10';
-
-      // En web usar proxy CORS, en móvil usar API directa
-      final String fullUrl = kIsWeb
-          ? '$corsProxy${Uri.encodeComponent(apiUrl)}'
-          : apiUrl;
-
-      final uri = Uri.parse(fullUrl);
-
-      print('🌐 Realizando petición a: $uri');
-      print('📱 Plataforma: ${kIsWeb ? "Web (usando proxy CORS público)" : "Nativa"}');
+      final uri = Uri.parse(
+        '$baseUrl/users/$username/repos?sort=updated&per_page=10',
+      );
 
       final response = await client.get(
         uri,
