@@ -281,7 +281,7 @@ class ProfileTab extends StatelessWidget {
                 bottomRight: Radius.circular(3),
               ),
               child: ModelViewer(
-                src: 'assets/arana22.glb',
+                src: 'https://portafolio001.elizabethhuanca40172.workers.dev/drive/1GR7WJ4H2SqJ25BfEtlVpKaOSDHvuDVH3',
                 alt: 'Modelo 3D',
                 autoRotate: true,
                 autoRotateDelay: 0,

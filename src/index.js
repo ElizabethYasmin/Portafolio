@@ -71,6 +71,29 @@ export default {
       );
     }
 
+    // Proxy para archivos de Google Drive (modelo 3D)
+    if (path.startsWith('/drive/')) {
+      const fileId = path.substring('/drive/'.length);
+      const driveUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      try {
+        const driveResponse = await fetch(driveUrl, { redirect: 'follow' });
+        const body = await driveResponse.arrayBuffer();
+        return new Response(body, {
+          status: driveResponse.status,
+          headers: {
+            ...CORS_HEADERS,
+            'Content-Type': driveResponse.headers.get('Content-Type') || 'application/octet-stream',
+            'Cache-Control': 'public, max-age=86400',
+          },
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     // Buscar la configuración de API que corresponde
     let matchedPrefix = null;
     let config = null;
