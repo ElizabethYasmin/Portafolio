@@ -97,8 +97,6 @@ class ProfileTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _buildCodeLine('documento', person.numeroDocumento, DarculaColors.string),
-          const Divider(color: DarculaColors.border, height: 20),
           _buildCodeLine('nombre', person.razonSocial, DarculaColors.string),
           const Divider(color: DarculaColors.border, height: 20),
           _buildCodeLine('condicion', person.condicion, DarculaColors.keyword),
@@ -324,8 +322,8 @@ class ProfileTab extends StatelessWidget {
           ),
           SizedBox(height: 12),
           Text(
-            'Desarrolladora Flutter apasionada por crear aplicaciones '
-            'móviles modernas y eficientes. Especializada en arquitectura '
+            'Desarrolladora Fullstack apasionada por crear aplicaciones '
+            'modernas y eficientes. Especializada en arquitectura '
             'limpia, patrones de diseño y mejores prácticas.',
             style: TextStyle(
               fontSize: 13,

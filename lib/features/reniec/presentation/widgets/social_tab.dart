@@ -36,9 +36,9 @@ class SocialTab extends StatelessWidget {
           _buildSocialCard(
             icon: Icons.email,
             title: 'Email',
-            subtitle: 'elizabeth.yasmin@example.com',
+            subtitle: 'elizabethhuancap@gmail.com',
             color: const Color(0xFFEA4335),
-            url: 'mailto:elizabeth.yasmin@example.com',
+            url: 'mailto:elizabethhuancap@gmail.com',
           ),
           const SizedBox(height: 30),
 
